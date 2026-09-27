@@ -1,22 +1,26 @@
-# Bureaucracy Translator
+# Bureaucracy Translator🪻️
 
-Making bureaucratic language easier to understand!
+**Making bureaucratic language easier to understand!** :)
 
 Bureaucratic and legal documents can be difficult to understand even when you know the language.
 
-They are often filled with formal terms, long sentences, and information that is hard to turn into a simple answer: “What does this actually mean, and what do I need to do?”
+They are often filled with formal terms, long sentences, and information that is hard to turn into a simple answer:
 
-Bureaucracy Translator is a hackathon project built to make that process simpler.
+> **“What does this actually mean, and what do I need to do?”**
+
+**Bureaucracy Translator** is a hackathon project built to make that process simpler.
 
 You can paste the text of a document or upload an image. The application extracts the content when necessary and uses AI to explain it in plain language, highlight the important information, and show the next steps in a clear way.
 
-## Status
+---
 
-🚧 **Early development**
+## 🚧 Status
 
-The core backend and document-processing pipeline are now working.
+**Early development**
 
-Current status:
+The core backend, document-processing pipeline, and initial frontend are working.
+
+### Current progress
 
 * [x] Spring Boot project setup
 * [x] Java 21 configuration
@@ -29,46 +33,101 @@ Current status:
 * [x] Image document translation
 * [x] Structured AI response
 * [x] Input validation and error handling
-* [x] Automated tests
-* [ ] Frontend
-* [ ] Language selection
+* [x] Automated tests added
+* [x] Frontend
+* [x] Language selection
+* [x] Text flow manually tested through the frontend
+* [ ] Full end-to-end test suite verified locally
 * [ ] Deployment
 
-The current backend test suite passes successfully.
+---
 
-## Planned Architecture
+## ✨ How It Works
+
+The application supports two input methods:
+
+### 📝 Text
+
+Paste the text of a bureaucratic document and choose the desired output language.
+
+### 📄 Image
+
+Upload an image of a document. The backend sends it to OCR.space to extract the text before sending it through the same AI translation pipeline.
+
+### Text Flow
 
 ```text
-User
-  │
-  ├── Paste document text
-  │
-  └── Upload document image
-          │
-          ▼
-      Spring Boot API
-          │
-          ├── Text ──────────────┐
-          │                      │
-          └── Image              │
-                │                │
-                ▼                │
-            OCR.space            │
-                │                │
-                └───────┬────────┘
-                        ▼
-                   Gemini API
-                        │
-                        ▼
-               Structured response
-                        │
-                        ├── Plain-language explanation
-                        └── Next steps
+User enters bureaucratic text
+        ↓
+Frontend validates input
+        ↓
+POST /api/translate
+        ↓
+Spring Boot validates request
+        ↓
+Gemini processes the content
+        ↓
+Structured explanation + next steps
+        ↓
+Frontend displays the result
 ```
 
-External API calls are handled by the backend so API keys are never exposed in the browser.
+### Image Flow
 
-## Tech Stack
+```text
+User uploads document image
+        ↓
+Frontend validates file
+        ↓
+POST /api/translate
+        ↓
+Spring Boot validates image
+        ↓
+OCR.space extracts the text
+        ↓
+Extracted text is sent to Gemini
+        ↓
+Structured explanation + next steps
+        ↓
+Frontend displays the result
+```
+
+---
+
+## 🏗️ Architecture
+
+```text
+                         User
+                           │
+              ┌────────────┴────────────┐
+              │                         │
+              ▼                         ▼
+       Paste document             Upload image
+              │                         │
+              └────────────┬────────────┘
+                           ▼
+                  Static Frontend
+                           │
+                           ▼
+                 Spring Boot REST API
+                    │             │
+                    │             │
+                    ▼             ▼
+               OCR.space      Gemini API
+                    │             │
+                    └──────┬──────┘
+                           ▼
+                  Structured response
+                    │              │
+                    ▼              ▼
+              Explanation      Next steps
+```
+
+External API calls are handled by the backend, so API keys are never exposed in the browser.
+
+---
+
+## 🛠️ Tech Stack
 
 * **Java 21**
 * **Spring Boot 3**
@@ -76,9 +135,100 @@ External API calls are handled by the backend so API keys are never exposed in t
 * **Google Gemini API** for document explanation
 * **OCR.space** for text extraction from images
 * **HTML / CSS / JavaScript** for the frontend
-* **Render** for deployment
+* **Render** for deployment *(planned)*
 
-## Requirements
+---
+
+## 🎨 Frontend
+
+The project includes a static frontend served directly by Spring Boot.
+
+### Features
+
+* Paste bureaucratic text
+* Upload documents as images
+* Drag-and-drop image upload
+* Client-side file validation
+* Character counter
+* Source language toggle
+* Translation/explanation loading state
+* Structured explanation and next steps
+* Copy result button
+* Responsive layout
+
+### Structure
+
+```text
+src/main/resources/static/
+├── index.html
+├── css/
+│   └── styles.css
+└── js/
+    ├── config.js
+    ├── api.js
+    ├── validation.js
+    └── app.js
+```
+
+---
+
+## 🔌 API
+
+### `POST /api/translate`
+
+The main endpoint accepts either document text or an image.
+
+The request must contain **exactly one** of:
+
+* `text`
+* `image`
+
+`targetLanguage` accepts:
+
+* `original`
+* `en`
+
+### Limits
+
+* Text: maximum 8,000 characters
+* Image formats: JPEG / JPG / PNG
+* Image size: maximum 1 MB
+
+### Success Response
+
+```json
+{
+  "explanation": "Plain-language explanation of the document.",
+  "nextSteps": [
+    "First action the user should consider.",
+    "Second action the user should consider."
+  ]
+}
+```
+
+### Error Response
+
+```json
+{
+  "error": "string"
+}
+```
+
+### Image Request Example
+
+```bash
+curl -X POST http://localhost:8080/api/translate \
+  -F "image=@document.jpg" \
+  -F "targetLanguage=original"
+```
+
+For image requests, the backend sends the document to OCR.space, extracts the text, and then passes the extracted text through the same translation pipeline used for text input.
+
+---
+
+## 💻 Running Locally
+
+### Requirements
 
 * JDK 21
 * Git
@@ -91,18 +241,24 @@ Verify Java:
 java -version
 ```
 
-## Running Locally
-
-Clone the repository and enter the project directory:
+### Clone the repository
 
 ```bash
 git clone <repository-url>
 cd bureaucracy-translator
 ```
 
-Before starting the application, configure the required environment variables.
+### Configure environment variables
 
-### Windows PowerShell
+The application requires:
+
+```text
+GEMINI_API_KEY
+GEMINI_MODEL
+OCR_SPACE_API_KEY
+```
+
+#### Windows PowerShell
 
 ```powershell
 $env:GEMINI_API_KEY="your-gemini-api-key"
@@ -110,19 +266,25 @@ $env:GEMINI_MODEL="gemini-3.5-flash-lite"
 $env:OCR_SPACE_API_KEY="your-ocr-space-api-key"
 ```
 
-Run the application:
-
-```powershell
-.\gradlew.bat bootRun
-```
-
-### macOS / Linux
+#### macOS / Linux
 
 ```bash
 export GEMINI_API_KEY="your-gemini-api-key"
 export GEMINI_MODEL="gemini-3.5-flash-lite"
 export OCR_SPACE_API_KEY="your-ocr-space-api-key"
+```
 
+Start the application:
+
+#### Windows
+
+```powershell
+.\gradlew.bat bootRun
+```
+
+#### macOS / Linux
+
+```bash
 ./gradlew bootRun
 ```
 
@@ -132,11 +294,21 @@ The application starts on:
 http://localhost:8080
 ```
 
-## Running Tests
+---
+
+## 🧪 Testing
+
+The project includes automated tests covering the translation service and REST controller.
+
+The text translation flow has also been manually tested through the frontend with a structured bureaucratic document.
+
+> The full automated test suite should be verified locally before marking all tests as passing.
+
+### Run tests
 
 The project uses the Gradle Wrapper, so Gradle does not need to be installed globally.
 
-### Windows
+#### Windows
 
 ```powershell
 $env:GEMINI_API_KEY="dummy"
@@ -144,54 +316,15 @@ $env:OCR_SPACE_API_KEY="dummy"
 .\gradlew.bat clean test
 ```
 
-### macOS / Linux
+#### macOS / Linux
 
 ```bash
 GEMINI_API_KEY=dummy OCR_SPACE_API_KEY=dummy ./gradlew clean test
 ```
 
-The test suite covers the translation service and REST controller.
+---
 
-## API
-
-The main API endpoint is:
-
-```text
-POST /api/translate
-```
-
-It accepts either document text or an image.
-
-### Text input
-
-The endpoint can receive document text together with the target language.
-
-### Image input
-
-An image can be uploaded as multipart form data:
-
-```bash
-curl -X POST http://localhost:8080/api/translate \
-  -F "image=@document.jpg" \
-  -F "targetLanguage=original"
-```
-
-The backend sends the image to OCR.space, extracts the document text, and then passes the extracted text through the same translation pipeline used for text input.
-
-The response contains a structured explanation and next steps:
-
-```json
-{
-  "explanation": "Plain-language explanation of the document.",
-  "nextSteps": [
-    "First action the user should consider.",
-    "Second action the user should consider."
-  ],
-  "disclaimer": "This is not legal advice."
-}
-```
-
-## Package Structure
+## 📦 Package Structure
 
 ```text
 src/main/java/com/bureaucracytranslator/
@@ -203,7 +336,9 @@ src/main/java/com/bureaucracytranslator/
 └── exception/    → Exception handling
 ```
 
-## Environment Variables
+---
+
+## 🔐 Environment Variables
 
 The application uses the following environment variables:
 
@@ -215,14 +350,37 @@ OCR_SPACE_API_KEY
 
 `GEMINI_MODEL` is configurable so the application can switch Gemini models without changing application code.
 
-API keys should never be committed to the repository.
+**API keys should never be committed to the repository.**
 
-## Project Principles
+---
 
-### • Privacy
+## 🔒 Security & Privacy
+
+The application applies validation at both the frontend and backend layers.
+
+* Input type and size validation
+* Text length validation
+* Image format validation
+* API-level request validation
+* API keys remain on the backend and are not exposed to the frontend
+* No frontend framework or build process required
+
+### Privacy
 
 Document contents and AI responses should not be written to application logs.
 
-<br>
+---
 
-_Built as a **hackathon project** <3_
+## 🚀 Future Improvements
+
+The project is still in early development. Planned improvements include:
+
+* [ ] Full end-to-end testing
+* [ ] Deployment
+* [ ] Further UI/UX improvements
+* [ ] Additional document and language support
+* [ ] More robust document processing
+
+---
+
+*Built as a **hackathon project** <3*
