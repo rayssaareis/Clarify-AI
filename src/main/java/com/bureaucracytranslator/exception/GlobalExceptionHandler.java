@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -24,6 +25,19 @@ public class GlobalExceptionHandler {
         log.warn("Gemini service error errorType={}", ex.getClass().getSimpleName());
         return ResponseEntity.status(HttpStatus.BAD_GATEWAY)
                 .body(new ErrorResponse("Could not process this document, please try again."));
+    }
+
+    @ExceptionHandler(OcrServiceException.class)
+    public ResponseEntity<ErrorResponse> handleOcrServiceException(OcrServiceException ex) {
+        log.warn("OCR service error errorType={}", ex.getClass().getSimpleName());
+        return ResponseEntity.status(HttpStatus.BAD_GATEWAY)
+                .body(new ErrorResponse("Could not process the uploaded image, please try again."));
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<ErrorResponse> handleMaxUploadSizeExceeded(MaxUploadSizeExceededException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ErrorResponse("Image is too large (max 1 MB)."));
     }
 
     @ExceptionHandler(Exception.class)

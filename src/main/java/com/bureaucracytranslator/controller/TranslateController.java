@@ -11,14 +11,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Set;
 import java.util.UUID;
 
 /**
- * Consumes multipart/form-data to stay compatible with the final API contract
- * (text + image + targetLanguage). The "image" field is intentionally not
- * accepted yet — that is a later step.
+ * Consumes multipart/form-data per the final API contract: exactly one of
+ * "text" or "image", plus "targetLanguage".
  */
 @RestController
 @RequestMapping("/api")
@@ -26,7 +26,8 @@ public class TranslateController {
 
     private static final Logger log = LoggerFactory.getLogger(TranslateController.class);
     private static final Set<String> ALLOWED_LANGUAGES = Set.of("original", "en");
-    private static final int MAX_TEXT_LENGTH = 8000;
+    private static final Set<String> SUPPORTED_IMAGE_TYPES = Set.of("image/jpeg", "image/jpg", "image/png");
+    private static final long MAX_IMAGE_SIZE_BYTES = 1_048_576L; // 1 MB
 
     private final TranslateService translateService;
 
@@ -37,23 +38,47 @@ public class TranslateController {
     @PostMapping(value = "/translate", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<TranslateResponse> translate(
             @RequestParam(required = false) String text,
+            @RequestParam(required = false) MultipartFile image,
             @RequestParam(defaultValue = "original") String targetLanguage) {
 
         String requestId = UUID.randomUUID().toString();
         log.info("Received /api/translate request requestId={}", requestId);
 
-        if (text == null || text.isBlank()) {
-            throw new InvalidRequestException("Field 'text' is required.");
+        boolean hasText = text != null && !text.isBlank();
+        boolean hasImage = image != null && !image.isEmpty();
+
+        if (hasText && hasImage) {
+            throw new InvalidRequestException("Provide either 'text' or 'image', not both.");
         }
-        if (text.length() > MAX_TEXT_LENGTH) {
-            throw new InvalidRequestException(
-                    "Field 'text' is too long (max " + MAX_TEXT_LENGTH + " characters).");
+        if (!hasText && !hasImage) {
+            throw new InvalidRequestException("Either 'text' or 'image' is required.");
         }
         if (!ALLOWED_LANGUAGES.contains(targetLanguage)) {
             throw new InvalidRequestException("Field 'targetLanguage' must be 'original' or 'en'.");
         }
 
-        TranslateResponse response = translateService.translate(text, targetLanguage, requestId);
+        TranslateResponse response;
+        if (hasText) {
+            if (text.length() > TranslateService.MAX_TEXT_LENGTH) {
+                throw new InvalidRequestException(
+                        "Field 'text' is too long (max " + TranslateService.MAX_TEXT_LENGTH + " characters).");
+            }
+            response = translateService.translate(text, targetLanguage, requestId);
+        } else {
+            validateImage(image);
+            response = translateService.translateImage(image, targetLanguage, requestId);
+        }
+
         return ResponseEntity.ok(response);
+    }
+
+    private void validateImage(MultipartFile image) {
+        String contentType = image.getContentType();
+        if (contentType == null || !SUPPORTED_IMAGE_TYPES.contains(contentType.toLowerCase())) {
+            throw new InvalidRequestException("Unsupported image type. Only JPEG and PNG are accepted.");
+        }
+        if (image.getSize() > MAX_IMAGE_SIZE_BYTES) {
+            throw new InvalidRequestException("Image is too large (max 1 MB).");
+        }
     }
 }

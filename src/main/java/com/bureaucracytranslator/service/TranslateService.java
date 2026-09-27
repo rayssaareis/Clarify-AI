@@ -1,25 +1,56 @@
 package com.bureaucracytranslator.service;
 
 import com.bureaucracytranslator.client.GeminiClient;
+import com.bureaucracytranslator.client.OcrSpaceClient;
 import com.bureaucracytranslator.dto.TranslateResponse;
 import com.bureaucracytranslator.exception.GeminiServiceException;
+import com.bureaucracytranslator.exception.InvalidRequestException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 @Service
 public class TranslateService {
 
-    private final GeminiClient geminiClient;
+    /**
+     * Shared with TranslateController: pasted text and OCR-extracted text are
+     * both capped at the same limit before reaching Gemini.
+     */
+    public static final int MAX_TEXT_LENGTH = 8000;
 
-    public TranslateService(GeminiClient geminiClient) {
+    private final GeminiClient geminiClient;
+    private final OcrSpaceClient ocrSpaceClient;
+
+    public TranslateService(GeminiClient geminiClient, OcrSpaceClient ocrSpaceClient) {
         this.geminiClient = geminiClient;
+        this.ocrSpaceClient = ocrSpaceClient;
     }
 
     public TranslateResponse translate(String text, String targetLanguage, String requestId) {
         TranslateResponse response = geminiClient.explain(text, targetLanguage, requestId);
         validate(response);
         return response;
+    }
+
+    /**
+     * Extracts text from the image via OCR, then reuses the exact same
+     * Gemini flow as translate(String, String, String). Gemini never knows
+     * whether the text originally came from a paste or an image.
+     */
+    public TranslateResponse translateImage(MultipartFile image, String targetLanguage, String requestId) {
+        String extractedText = ocrSpaceClient.extractText(image, requestId);
+
+        if (extractedText == null || extractedText.isBlank()) {
+            throw new InvalidRequestException(
+                    "Could not extract readable text from the image. Try a clearer photo or paste the text instead.");
+        }
+        if (extractedText.length() > MAX_TEXT_LENGTH) {
+            throw new InvalidRequestException(
+                    "The text extracted from the image is too long (max " + MAX_TEXT_LENGTH + " characters).");
+        }
+
+        return translate(extractedText, targetLanguage, requestId);
     }
 
     private void validate(TranslateResponse response) {
