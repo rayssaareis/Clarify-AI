@@ -1,8 +1,8 @@
 # Bureaucracy Translator
 
-Making bureaucratic language easier to understand !
+Making bureaucratic language easier to understand!
 
-Bureaucratic and legal documents can be difficult to understand even when you know the language. 
+Bureaucratic and legal documents can be difficult to understand even when you know the language.
 
 They are often filled with formal terms, long sentences, and information that is hard to turn into a simple answer: “What does this actually mean, and what do I need to do?”
 
@@ -10,12 +10,11 @@ Bureaucracy Translator is a hackathon project built to make that process simpler
 
 You can paste the text of a document or upload an image. The application extracts the content when necessary and uses AI to explain it in plain language, highlight the important information, and show the next steps in a clear way.
 
-
 ## Status
 
-• 🚧 **Early development**
+🚧 **Early development**
 
-The project skeleton is complete and the Spring Boot application builds and passes its tests.
+The core backend and document-processing pipeline are now working.
 
 Current status:
 
@@ -23,13 +22,19 @@ Current status:
 * [x] Java 21 configuration
 * [x] Gradle Wrapper
 * [x] Initial package structure
-* [x] Basic application test
-* [ ] Gemini integration
-* [ ] `/api/translate` endpoint
-* [ ] OCR integration
+* [x] Gemini integration
+* [x] `/api/translate` endpoint
+* [x] OCR integration
+* [x] Text document translation
+* [x] Image document translation
+* [x] Structured AI response
+* [x] Input validation and error handling
+* [x] Automated tests
 * [ ] Frontend
 * [ ] Language selection
 * [ ] Deployment
+
+The current backend test suite passes successfully.
 
 ## Planned Architecture
 
@@ -43,19 +48,25 @@ User
           ▼
       Spring Boot API
           │
-          ├── OCR.space
-          │
-          ▼
-       Gemini API
-          │
-          ▼
-   Structured explanation
-          │
-          ├── Plain-language explanation
-          └── Next steps
+          ├── Text ──────────────┐
+          │                      │
+          └── Image              │
+                │                │
+                ▼                │
+            OCR.space            │
+                │                │
+                └───────┬────────┘
+                        ▼
+                   Gemini API
+                        │
+                        ▼
+               Structured response
+                        │
+                        ├── Plain-language explanation
+                        └── Next steps
 ```
 
-External API calls will be handled by the backend so API keys are never exposed in the browser.
+External API calls are handled by the backend so API keys are never exposed in the browser.
 
 ## Tech Stack
 
@@ -89,17 +100,29 @@ git clone <repository-url>
 cd bureaucracy-translator
 ```
 
-Run the application with the Gradle Wrapper:
+Before starting the application, configure the required environment variables.
 
-### • Windows
+### Windows PowerShell
+
+```powershell
+$env:GEMINI_API_KEY="your-gemini-api-key"
+$env:GEMINI_MODEL="gemini-3.5-flash-lite"
+$env:OCR_SPACE_API_KEY="your-ocr-space-api-key"
+```
+
+Run the application:
 
 ```powershell
 .\gradlew.bat bootRun
 ```
 
-### • macOS / Linux
+### macOS / Linux
 
 ```bash
+export GEMINI_API_KEY="your-gemini-api-key"
+export GEMINI_MODEL="gemini-3.5-flash-lite"
+export OCR_SPACE_API_KEY="your-ocr-space-api-key"
+
 ./gradlew bootRun
 ```
 
@@ -109,18 +132,63 @@ The application starts on:
 http://localhost:8080
 ```
 
-To run the test suite:
+## Running Tests
 
-### • Windows
+The project uses the Gradle Wrapper, so Gradle does not need to be installed globally.
+
+### Windows
 
 ```powershell
-.\gradlew.bat test
+$env:GEMINI_API_KEY="dummy"
+$env:OCR_SPACE_API_KEY="dummy"
+.\gradlew.bat clean test
 ```
 
-### • macOS / Linux
+### macOS / Linux
 
 ```bash
-./gradlew test
+GEMINI_API_KEY=dummy OCR_SPACE_API_KEY=dummy ./gradlew clean test
+```
+
+The test suite covers the translation service and REST controller.
+
+## API
+
+The main API endpoint is:
+
+```text
+POST /api/translate
+```
+
+It accepts either document text or an image.
+
+### Text input
+
+The endpoint can receive document text together with the target language.
+
+### Image input
+
+An image can be uploaded as multipart form data:
+
+```bash
+curl -X POST http://localhost:8080/api/translate \
+  -F "image=@document.jpg" \
+  -F "targetLanguage=original"
+```
+
+The backend sends the image to OCR.space, extracts the document text, and then passes the extracted text through the same translation pipeline used for text input.
+
+The response contains a structured explanation and next steps:
+
+```json
+{
+  "explanation": "Plain-language explanation of the document.",
+  "nextSteps": [
+    "First action the user should consider.",
+    "Second action the user should consider."
+  ],
+  "disclaimer": "This is not legal advice."
+}
 ```
 
 ## Package Structure
@@ -137,7 +205,7 @@ src/main/java/com/bureaucracytranslator/
 
 ## Environment Variables
 
-The following environment variables will be required once the external integrations are implemented:
+The application uses the following environment variables:
 
 ```text
 GEMINI_API_KEY
@@ -145,28 +213,9 @@ GEMINI_MODEL
 OCR_SPACE_API_KEY
 ```
 
-`GEMINI_MODEL` will be configurable so the application can switch models without changing application code.
+`GEMINI_MODEL` is configurable so the application can switch Gemini models without changing application code.
 
-## API
-
-The main API endpoint planned for the MVP is:
-
-```text
-POST /api/translate
-```
-
-It will accept either document text or an image and return a structured response containing:
-
-```json
-{
-  "explanation": "Plain-language explanation of the document.",
-  "nextSteps": [
-    "First action the user should consider.",
-    "Second action the user should consider."
-  ],
-  "disclaimer": "This is not legal advice."
-}
-```
+API keys should never be committed to the repository.
 
 ## Project Principles
 
@@ -174,26 +223,6 @@ It will accept either document text or an image and return a structured response
 
 Document contents and AI responses should not be written to application logs.
 
-### • Reliability
-
-The system should explain only what is supported by the provided document and avoid inventing deadlines, amounts, obligations, or clauses.
-
-### • Simplicity
-
-The output should use short sentences and plain language instead of unnecessary legal terminology.
-
-### • Transparency
-
-When the input is unclear, incomplete, or affected by poor OCR, the system should say so instead of guessing.
-
-## Project Goal
-
-A complicated document should not become a barrier to understanding what is happening in your own life.
-
-Bureaucracy Translator was created to make bureaucratic and legal information clearer and more accessible, helping people understand what a document says, why it matters, and what they may need to do next.
-
-Because understanding important information should not require a law degree.
-
 <br>
 
-### Built as a **hackathon project** <3
+_Built as a **hackathon project** <3_
