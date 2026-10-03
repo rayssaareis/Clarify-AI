@@ -40,6 +40,10 @@ const errorCard = document.getElementById("error-card");
 const errorMessage = document.getElementById("error-message");
 const retryBtn = document.getElementById("retry-btn");
 
+const themeToggleBtn = document.getElementById("theme-toggle");
+const themeToggleIcon = document.getElementById("theme-toggle-icon");
+const themeToggleLabel = document.getElementById("theme-toggle-label");
+
 // ---------------------------------------------------------------------
 // State
 // ---------------------------------------------------------------------
@@ -52,7 +56,45 @@ let isSubmitting = false;
 // Init
 // ---------------------------------------------------------------------
 
+function applyTheme(theme) {
+  document.documentElement.setAttribute("data-theme", theme);
+  const isDark = theme === "dark";
+  if (themeToggleIcon) {
+    themeToggleIcon.textContent = isDark ? "🌙" : "☀️";
+  }
+  if (themeToggleLabel) {
+    themeToggleLabel.textContent = isDark ? "Dark" : "Light";
+  }
+  try {
+    localStorage.setItem("clarify_theme", theme);
+  } catch {
+    // Ignore storage errors if disabled
+  }
+}
+
+function initTheme() {
+  let theme = "light";
+  try {
+    const saved = localStorage.getItem("clarify_theme");
+    if (saved === "dark" || saved === "light") {
+      theme = saved;
+    } else if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) {
+      theme = "dark";
+    }
+  } catch {
+    // Fallback to light
+  }
+  applyTheme(theme);
+}
+
+function toggleTheme() {
+  const current = document.documentElement.getAttribute("data-theme") || "light";
+  const next = current === "dark" ? "light" : "dark";
+  applyTheme(next);
+}
+
 function init() {
+  initTheme();
   CONFIG.LANGUAGES.forEach((lang) => {
     const option = document.createElement("option");
     option.value = lang.value;
@@ -233,7 +275,7 @@ async function copyResult() {
     copyFeedback.classList.remove("copy-feedback--hidden");
     setTimeout(() => copyFeedback.classList.add("copy-feedback--hidden"), 2000);
   } catch {
-    // Clipboard API unavailable (e.g. insecure context) — fail silently,
+    // Clipboard API unavailable (e.g. insecure context): fail silently,
     // the text is still fully visible/selectable for manual copy.
   }
 }
@@ -297,6 +339,10 @@ function bindEvents() {
     formCard.scrollIntoView({ behavior: "smooth", block: "start" });
   });
   copyBtn.addEventListener("click", copyResult);
+
+  if (themeToggleBtn) {
+    themeToggleBtn.addEventListener("click", toggleTheme);
+  }
 }
 
 init();
