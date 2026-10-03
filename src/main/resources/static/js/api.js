@@ -31,7 +31,7 @@ export async function translate({ text, imageFile, targetLanguage }, { signal } 
     });
   } catch (err) {
     if (err.name === "AbortError") throw err;
-    throw new Error("Não foi possível conectar ao servidor. Verifique sua conexão e tente novamente.");
+    throw new Error("Could not connect to the server. Check your connection and try again.");
   }
 
   let payload = null;
@@ -44,12 +44,12 @@ export async function translate({ text, imageFile, targetLanguage }, { signal } 
   if (!response.ok) {
     const message = payload && payload.error
       ? payload.error
-      : "Não foi possível processar o documento. Tente novamente.";
+      : "Could not process the document. Please try again.";
     throw new Error(message);
   }
 
   if (!payload || !payload.explanation || !Array.isArray(payload.nextSteps)) {
-    throw new Error("Resposta inesperada do servidor. Tente novamente.");
+    throw new Error("Unexpected response from the server. Please try again.");
   }
 
   return payload;

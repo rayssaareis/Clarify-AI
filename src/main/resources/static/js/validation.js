@@ -8,23 +8,23 @@ import { CONFIG } from "./config.js";
 
 export function validateText(text) {
   if (!text || !text.trim()) {
-    return "Cole ou digite o texto que deseja traduzir.";
+    return "Paste or type the text you want explained.";
   }
   if (text.length > CONFIG.MAX_TEXT_LENGTH) {
-    return `Texto muito longo (${text.length.toLocaleString("pt-BR")}/${CONFIG.MAX_TEXT_LENGTH.toLocaleString("pt-BR")} caracteres).`;
+    return `Text is too long (${text.length.toLocaleString("en-US")}/${CONFIG.MAX_TEXT_LENGTH.toLocaleString("en-US")} characters).`;
   }
   return null;
 }
 
 export function validateImage(file) {
   if (!file) {
-    return "Selecione uma imagem para enviar.";
+    return "Select an image to upload.";
   }
   if (!CONFIG.ALLOWED_IMAGE_TYPES.includes(file.type)) {
-    return "Tipo de arquivo não suportado. Envie uma imagem JPEG ou PNG.";
+    return "Unsupported file type. Please upload a JPEG or PNG image.";
   }
   if (file.size > CONFIG.MAX_IMAGE_SIZE_BYTES) {
-    return `Imagem muito grande (${formatBytes(file.size)}). O limite é ${formatBytes(CONFIG.MAX_IMAGE_SIZE_BYTES)}.`;
+    return `Image is too large (${formatBytes(file.size)}). The limit is ${formatBytes(CONFIG.MAX_IMAGE_SIZE_BYTES)}.`;
   }
   return null;
 }

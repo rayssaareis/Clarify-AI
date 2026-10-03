@@ -12,8 +12,8 @@ export const CONFIG = {
   ALLOWED_IMAGE_TYPES: ["image/jpeg", "image/jpg", "image/png"],
 
   LANGUAGES: [
-    { value: "original", label: "Manter idioma original" },
-    { value: "en", label: "Traduzir para inglês" },
+    { value: "original", label: "Original language" },
+    { value: "en", label: "English" },
   ],
   DEFAULT_LANGUAGE: "original",
 };

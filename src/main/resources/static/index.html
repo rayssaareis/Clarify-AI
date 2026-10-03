@@ -1,53 +1,53 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bureaucracy Translator</title>
+  <title>Clarify AI</title>
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
   <main class="page">
     <header class="hero">
-      <h1>Bureaucracy Translator</h1>
-      <p class="hero__subtitle">Entenda documentos burocráticos sem precisar falar burocratês.</p>
+      <h1>Clarify AI</h1>
+      <p class="hero__subtitle">Zora reads the fine print, so you don't have to.</p>
     </header>
 
-    <section class="card" aria-label="Formulário de tradução">
+    <section class="card" aria-label="Translation form">
       <!-- Mode switch -->
-      <div class="tabs" role="tablist" aria-label="Tipo de entrada">
+      <div class="tabs" role="tablist" aria-label="Input type">
         <button type="button" class="tab tab--active" id="tab-text" role="tab" aria-selected="true">
-          📋 Colar texto
+          📋 Paste text
         </button>
         <button type="button" class="tab" id="tab-image" role="tab" aria-selected="false">
-          🖼️ Enviar imagem
+          🖼️ Upload image
         </button>
       </div>
 
       <!-- Text input panel -->
       <div id="panel-text" class="panel">
-        <label for="text-input" class="field-label">Cole aqui o texto burocrático</label>
+        <label for="text-input" class="field-label">Paste the official text here</label>
         <textarea
           id="text-input"
           class="textarea"
-          placeholder="Cole ou digite o texto do documento..."
+          placeholder="Paste or type the document text..."
           rows="8"
         ></textarea>
         <div class="field-hint">
-          <span id="char-counter">0 / 8.000</span>
+          <span id="char-counter">0 / 8,000</span>
         </div>
       </div>
 
       <!-- Image input panel -->
       <div id="panel-image" class="panel panel--hidden">
-        <label class="field-label" for="file-input">Envie uma imagem do documento</label>
+        <label class="field-label" for="file-input">Upload an image of the document</label>
 
-        <div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="Selecionar ou soltar imagem">
+        <div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="Select or drop an image">
           <input id="file-input" type="file" accept="image/jpeg,image/jpg,image/png" hidden />
           <div id="dropzone-empty" class="dropzone__content">
             <span class="dropzone__icon">📎</span>
-            <p><strong>Arraste uma imagem</strong> ou clique para selecionar</p>
-            <p class="dropzone__hint">JPEG ou PNG, até 1 MB</p>
+            <p><strong>Drag an image</strong> or click to select</p>
+            <p class="dropzone__hint">JPEG or PNG, up to 1 MB</p>
           </div>
           <div id="dropzone-file" class="dropzone__file dropzone__file--hidden">
             <span class="dropzone__icon">🖼️</span>
@@ -55,14 +55,14 @@
               <p id="file-name" class="dropzone__file-name"></p>
               <p id="file-size" class="dropzone__file-size"></p>
             </div>
-            <button type="button" id="remove-file" class="btn-icon" aria-label="Remover imagem">✕</button>
+            <button type="button" id="remove-file" class="btn-icon" aria-label="Remove image">✕</button>
           </div>
         </div>
       </div>
 
       <!-- Language -->
       <div class="field">
-        <label for="language-select" class="field-label">Idioma de destino</label>
+        <label for="language-select" class="field-label">Explain in</label>
         <select id="language-select" class="select"></select>
       </div>
 
@@ -70,34 +70,34 @@
       <p id="form-error" class="form-error form-error--hidden" role="alert"></p>
 
       <button type="button" id="submit-btn" class="btn-primary" disabled>
-        <span id="submit-label">Traduzir</span>
+        <span id="submit-label">Explain this document</span>
         <span id="submit-spinner" class="spinner spinner--hidden" aria-hidden="true"></span>
       </button>
     </section>
 
     <!-- Result -->
-    <section id="result-card" class="card result-card result-card--hidden" aria-label="Resultado">
-      <h2 class="result-title">✨ Entenda este documento</h2>
+    <section id="result-card" class="card result-card result-card--hidden" aria-label="Result">
+      <h2 class="result-title">✨ Here's what Zora found</h2>
 
       <div class="result-block">
-        <h3 class="result-block__label">Explicação</h3>
+        <h3 class="result-block__label">Explanation</h3>
         <p id="result-explanation" class="result-explanation"></p>
       </div>
 
       <div class="result-block">
-        <h3 class="result-block__label">Próximos passos</h3>
+        <h3 class="result-block__label">Next steps</h3>
         <ol id="result-steps" class="result-steps"></ol>
       </div>
 
-      <button type="button" id="copy-btn" class="btn-secondary">📋 Copiar</button>
-      <p id="copy-feedback" class="copy-feedback copy-feedback--hidden">Copiado!</p>
+      <button type="button" id="copy-btn" class="btn-secondary">📋 Copy</button>
+      <p id="copy-feedback" class="copy-feedback copy-feedback--hidden">Copied!</p>
     </section>
 
     <!-- Error state -->
-    <section id="error-card" class="card error-card error-card--hidden" aria-label="Erro">
+    <section id="error-card" class="card error-card error-card--hidden" aria-label="Error">
       <p class="error-card__icon">⚠️</p>
       <p id="error-message" class="error-card__message"></p>
-      <button type="button" id="retry-btn" class="btn-secondary">Tentar novamente</button>
+      <button type="button" id="retry-btn" class="btn-secondary">Try again</button>
     </section>
   </main>
 

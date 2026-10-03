@@ -93,7 +93,7 @@ function setMode(nextMode) {
 function updateCharCounter() {
   const length = textInput.value.length;
   const max = CONFIG.MAX_TEXT_LENGTH;
-  charCounter.textContent = `${length.toLocaleString("pt-BR")} / ${max.toLocaleString("pt-BR")}`;
+  charCounter.textContent = `${length.toLocaleString("en-US")} / ${max.toLocaleString("en-US")}`;
   charCounter.classList.toggle("is-over", length > max);
 }
 
@@ -186,7 +186,7 @@ async function handleSubmit() {
 
 function setSubmitting(value) {
   isSubmitting = value;
-  submitLabel.textContent = value ? "Traduzindo..." : "Traduzir";
+  submitLabel.textContent = value ? "Zora is reading your document..." : "Explain this document";
   submitSpinner.classList.toggle("spinner--hidden", !value);
   updateSubmitState();
 }
@@ -226,7 +226,7 @@ async function copyResult() {
   const steps = Array.from(resultSteps.children)
     .map((li, i) => `${i + 1}. ${li.textContent}`)
     .join("\n");
-  const text = `${resultExplanation.textContent}\n\nPróximos passos:\n${steps}`;
+  const text = `${resultExplanation.textContent}\n\nNext steps:\n${steps}`;
 
   try {
     await navigator.clipboard.writeText(text);
