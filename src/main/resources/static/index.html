@@ -4,129 +4,214 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Clarify AI: Simple Explanations for Complicated Documents</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/styles.css" />
   <script>
     (function () {
       try {
         var saved = localStorage.getItem('clarify_theme');
-        var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-        var theme = saved || (prefersDark ? 'dark' : 'light');
+        var theme = (saved === 'dark' || saved === 'light') ? saved : 'light';
         document.documentElement.setAttribute('data-theme', theme);
-      } catch (e) {}
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
     })();
   </script>
 </head>
 <body>
-  <div class="site-wrapper">
-    <!-- Top Navigation / Header -->
-    <header class="site-header">
-      <div class="header-inner">
-        <div class="header-brand">
-          <!-- Clearly Reserved Area for Future Clarify AI Logo -->
-          <div class="logo-slot" title="Reserved space for Clarify AI Logo" aria-label="Clarify AI Logo Placeholder">
-            <div class="logo-slot__inner">
-              <span class="logo-slot__symbol" aria-hidden="true">✦</span>
-              <span class="logo-slot__text">Logo</span>
-            </div>
+  <div class="studio-universe">
+    <!-- Top Utility Bar -->
+    <header class="studio-topbar">
+      <div class="topbar-inner">
+        <div class="topbar-brand">
+          <div class="logo-slot" aria-label="Clarify AI Logo">
+            <img src="assets/logo.png" alt="Clarify AI" class="logo-slot__img" />
           </div>
-
-          <div class="brand-headings">
-            <span class="brand-name">Clarify AI</span>
-            <span class="brand-tagline">Plain language document assistant</span>
-          </div>
+          <span class="brand-eyebrow">Clarify AI</span>
         </div>
 
-        <div class="header-actions">
-          <div class="zora-header-status" aria-label="Assistant status">
-            <span class="status-pulse" aria-hidden="true"></span>
-            <span class="status-text">Zora is ready</span>
+        <div class="topbar-actions">
+          <div class="live-status-badge" aria-label="Assistant readiness status">
+            <span class="live-status-dot" aria-hidden="true"></span>
+            <span class="live-status-text">Zora is ready</span>
           </div>
 
-          <button type="button" id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle light or dark theme">
-            <span id="theme-toggle-icon" class="theme-toggle-btn__icon" aria-hidden="true">☀️</span>
-            <span id="theme-toggle-label" class="theme-toggle-btn__label">Light</span>
+          <button type="button" id="theme-toggle" class="theme-button" aria-label="Toggle light and dark theme">
+            <span id="theme-toggle-icon" class="theme-button__icon" aria-hidden="true">
+              <svg class="theme-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="5"></circle>
+                <line x1="12" y1="1" x2="12" y2="3"></line>
+                <line x1="12" y1="21" x2="12" y2="23"></line>
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                <line x1="1" y1="12" x2="3" y2="12"></line>
+                <line x1="21" y1="12" x2="23" y2="12"></line>
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+              </svg>
+            </span>
+            <span id="theme-toggle-label" class="theme-button__label">Light</span>
           </button>
         </div>
       </div>
     </header>
 
-    <!-- Main Content Container -->
-    <main class="page-container">
-      <!-- Welcoming Hero -->
-      <section class="hero-section">
-        <div class="hero-badge">
-          <span class="hero-badge__sparkle" aria-hidden="true">✨</span>
-          <span>Simple answers to complicated paperwork</span>
-        </div>
-        <h1 class="hero-title">Translate confusing paperwork into plain language</h1>
-        <p class="hero-subtitle">
-          Got a difficult notice, tenancy agreement, or official letter?
-          Zora breaks it down into clear words and practical steps so you know exactly what to do.
-        </p>
-      </section>
+    <!-- Split-Stage Studio Canvas -->
+    <main class="studio-canvas">
+      <div class="split-stage">
+        <!-- Left Stage: Architectural Brand & Living Assistant Presence -->
+        <section class="presence-stage" aria-label="Clarify AI and Zora Overview">
+          <!-- The Atmospheric Living Orb -->
+          <div class="living-orb-container" aria-hidden="true">
+            <div class="living-orb living-orb--primary"></div>
+            <div class="living-orb living-orb--secondary"></div>
+          </div>
 
-      <!-- Desktop 2-Column Workspace Grid -->
-      <div class="workspace-grid">
-        <!-- Main Form Column -->
-        <div class="workspace-main">
-          <section class="card form-card" aria-label="Translation form">
+          <div class="presence-content">
+            <div class="presence-header">
+              <div class="concept-badge">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z"></path>
+                </svg>
+                <span>Document Demystifier</span>
+              </div>
+              <h1 class="presence-title">Clarify AI</h1>
+              <p class="presence-tagline">
+                The honest, plain-language assistant that turns intimidating paperwork into clear human guidance.
+              </p>
+            </div>
+
+            <!-- Zora Companion Capsule -->
+            <div class="zora-capsule">
+              <div class="zora-capsule__top">
+                <div class="zora-avatar-pod">
+                  <svg class="zora-avatar-svg" width="26" height="26" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+                    <circle cx="16" cy="16" r="14" stroke="currentColor" stroke-width="2" stroke-dasharray="3 3"></circle>
+                    <path d="M10 12C10 9.79086 11.7909 8 14 8H18C20.2091 8 22 9.79086 22 12V20C22 22.2091 20.2091 24 18 24H14C11.7909 24 10 22.2091 10 20V12Z" fill="currentColor" fill-opacity="0.15" stroke="currentColor" stroke-width="2"></path>
+                    <path d="M12 13L20 13L12 19L20 19" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path>
+                  </svg>
+                  <span class="zora-beacon-dot" aria-hidden="true"></span>
+                </div>
+                <div class="zora-capsule__meta">
+                  <div class="zora-capsule__title-row">
+                    <h2 class="zora-capsule__name">Zora</h2>
+                    <span class="zora-capsule__status">Online & Ready</span>
+                  </div>
+                  <span class="zora-capsule__desc">Your personal document guide</span>
+                </div>
+              </div>
+
+              <p class="zora-capsule__speech">
+                "Paste any complicated letter, contract clause, or official decree on the right. I will cut through the fog and tell you what it actually means and what you need to do."
+              </p>
+
+              <!-- Space Prepared for Future Illustration Artwork -->
+              <div class="illustration-slot" title="Area for future illustration" aria-label="Illustration placeholder">
+                <div class="illustration-slot__content">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                  </svg>
+                  <span>Illustration space</span>
+                </div>
+              </div>
+
+              <div class="reassurance-list">
+                <div class="reassurance-item">
+                  <svg class="reassurance-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                  <span>No legal knowledge required</span>
+                </div>
+                <div class="reassurance-item">
+                  <svg class="reassurance-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                  <span>Concrete, actionable next steps</span>
+                </div>
+                <div class="reassurance-item">
+                  <svg class="reassurance-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                  <span>Private and completely confidential</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Right Stage: The Interactive Document Workspace Sheet -->
+        <section class="workspace-stage" aria-label="Document Intake Workspace">
+          <div class="card form-card">
             <!-- Mode Switch Tabs -->
-            <div class="tabs" role="tablist" aria-label="Input type">
+            <div class="mode-segmented-bar" role="tablist" aria-label="Input mode">
               <button type="button" class="tab tab--active" id="tab-text" role="tab" aria-selected="true">
-                <span class="tab__icon" aria-hidden="true">📋</span>
+                <svg class="tab-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="16" y1="13" x2="8" y2="13"></line>
+                  <line x1="16" y1="17" x2="8" y2="17"></line>
+                  <line x1="10" y1="9" x2="8" y2="9"></line>
+                </svg>
                 <span>Paste text</span>
               </button>
               <button type="button" class="tab" id="tab-image" role="tab" aria-selected="false">
-                <span class="tab__icon" aria-hidden="true">🖼️</span>
+                <svg class="tab-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                  <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                  <polyline points="21 15 16 10 5 21"></polyline>
+                </svg>
                 <span>Upload image</span>
               </button>
             </div>
 
             <!-- Text Input Panel -->
             <div id="panel-text" class="panel">
-              <div class="field-label-row">
-                <label for="text-input" class="field-label">What does your document say?</label>
-                <span class="field-helper">Paste letters, contracts, or notices</span>
+              <div class="input-head">
+                <label for="text-input" class="input-label">What does your document say?</label>
+                <span class="input-annotation">Paste formal letters, notices, or clauses</span>
               </div>
               <textarea
                 id="text-input"
                 class="textarea"
-                placeholder="Paste the confusing text here (for example: rental agreements, tax letters, court notices, or small print clauses)..."
-                rows="8"
+                placeholder="Paste the confusing text here (for example: tenancy contracts, court demands, tax forms, or small print clauses)..."
+                rows="9"
               ></textarea>
-              <div class="field-hint">
-                <span class="field-hint__note">Take as much text as you need</span>
+              <div class="input-foot">
+                <span class="input-foot__note">Take as much text as you need</span>
                 <span id="char-counter">0 / 8,000</span>
               </div>
             </div>
 
             <!-- Image Input Panel -->
             <div id="panel-image" class="panel panel--hidden">
-              <div class="field-label-row">
+              <div class="input-head">
                 <label class="field-label" for="file-input">Upload a picture of the document</label>
-                <span class="field-helper">Clear photo or scan</span>
+                <span class="input-annotation">Clear photo or scanned page</span>
               </div>
 
               <div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="Select or drop an image">
                 <input id="file-input" type="file" accept="image/jpeg,image/jpg,image/png" hidden />
 
-                <div id="dropzone-empty" class="dropzone__content">
-                  <div class="dropzone__circle" aria-hidden="true">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <div id="dropzone-empty" class="dropzone__empty">
+                  <div class="dropzone__icon-circle" aria-hidden="true">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                       <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                       <polyline points="17 8 12 3 7 8"></polyline>
                       <line x1="12" y1="3" x2="12" y2="15"></line>
                     </svg>
                   </div>
-                  <p class="dropzone__primary-text">
-                    <strong>Drop your document here</strong> or <span class="dropzone__browse-highlight">choose a file</span>
+                  <p class="dropzone__lead">
+                    <strong>Drop your document here</strong> or <span class="dropzone__browse-action">choose a file</span>
                   </p>
-                  <p class="dropzone__support-text">Supports JPG or PNG photos up to 1 MB</p>
+                  <p class="dropzone__meta">Supports JPG or PNG format, up to 1 MB</p>
                 </div>
 
                 <div id="dropzone-file" class="dropzone__file dropzone__file--hidden">
                   <div class="dropzone__file-icon" aria-hidden="true">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                       <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
                       <circle cx="8.5" cy="8.5" r="1.5"></circle>
                       <polyline points="21 15 16 10 5 21"></polyline>
@@ -134,143 +219,132 @@
                   </div>
                   <div class="dropzone__file-info">
                     <p id="file-name" class="dropzone__file-name"></p>
-                    <div class="dropzone__file-meta">
+                    <div class="dropzone__file-sub">
                       <span id="file-size" class="dropzone__file-size"></span>
-                      <span class="dropzone__file-ready">Ready for Zora</span>
+                      <span class="dropzone__file-badge">Ready for Zora</span>
                     </div>
                   </div>
-                  <button type="button" id="remove-file" class="btn-icon" aria-label="Remove image" title="Remove image">✕</button>
+                  <button type="button" id="remove-file" class="btn-icon" aria-label="Remove image" title="Remove image">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                      <line x1="18" y1="6" x2="6" y2="18"></line>
+                      <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                  </button>
                 </div>
               </div>
             </div>
 
-            <!-- Language Field -->
-            <div class="field">
-              <div class="field-label-row">
+            <!-- Language and Preference Controls -->
+            <div class="field language-field">
+              <div class="input-head">
                 <label for="language-select" class="field-label">Explain in language</label>
-                <span class="field-helper">Choose your preferred output</span>
+                <span class="input-annotation">Output simplified explanation</span>
               </div>
-              <div class="select-wrapper">
+              <div class="select-container">
                 <select id="language-select" class="select"></select>
-                <span class="select-arrow" aria-hidden="true">▾</span>
+                <span class="select-arrow" aria-hidden="true">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                  </svg>
+                </span>
               </div>
             </div>
 
-            <!-- Validation Error Message -->
+            <!-- Inline Form Error -->
             <p id="form-error" class="form-error form-error--hidden" role="alert"></p>
 
             <!-- Primary Action Button -->
             <button type="button" id="submit-btn" class="btn-primary" disabled>
-              <span class="btn-primary__sparkle" aria-hidden="true">✨</span>
+              <svg class="btn-star" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z"></path>
+              </svg>
               <span id="submit-label">Explain this document</span>
               <span id="submit-spinner" class="spinner spinner--hidden" aria-hidden="true"></span>
             </button>
-          </section>
-        </div>
-
-        <!-- Zora Companion Sidebar Column -->
-        <aside class="workspace-sidebar" aria-label="About Zora assistant">
-          <div class="zora-card">
-            <div class="zora-card__header">
-              <div class="zora-avatar">
-                <span class="zora-avatar__letter">Z</span>
-                <span class="zora-avatar__active-dot" aria-hidden="true"></span>
-              </div>
-              <div class="zora-card__title-group">
-                <div class="zora-card__name-badge">
-                  <h2 class="zora-card__name">Zora</h2>
-                  <span class="zora-card__status">● Online & Ready</span>
-                </div>
-                <p class="zora-card__role">Your friendly document guide</p>
-              </div>
-            </div>
-
-            <p class="zora-card__intro">
-              Official paperwork can be intimidating and hard to follow.
-              Zora reads between the lines, translates the legalese, and tells you what it means for you.
-            </p>
-
-            <div class="zora-features-list">
-              <div class="zora-feature-item">
-                <div class="zora-feature-item__icon" aria-hidden="true">💡</div>
-                <div class="zora-feature-item__text">
-                  <strong>Plain language first</strong>
-                  <span>Explains complex paragraphs in terms anyone can understand.</span>
-                </div>
-              </div>
-
-              <div class="zora-feature-item">
-                <div class="zora-feature-item__icon" aria-hidden="true">📌</div>
-                <div class="zora-feature-item__text">
-                  <strong>Clear action steps</strong>
-                  <span>Gives you practical, numbered steps so you know what to do next.</span>
-                </div>
-              </div>
-
-              <div class="zora-feature-item">
-                <div class="zora-feature-item__icon" aria-hidden="true">🔒</div>
-                <div class="zora-feature-item__text">
-                  <strong>Simple and private</strong>
-                  <span>Paste text or drop a photo. No complicated setup needed.</span>
-                </div>
-              </div>
-            </div>
           </div>
-        </aside>
+        </section>
       </div>
 
-      <!-- Result Card -->
+      <!-- Result Stage: Expansive Panoramic Executive Summary -->
       <section id="result-card" class="card result-card result-card--hidden" aria-label="Result from Zora">
-        <div class="result-header">
-          <div class="result-tag">
-            <span class="result-tag__icon" aria-hidden="true">✨</span>
-            <span>Document Breakdown</span>
+        <div class="result-card-banner">
+          <div class="result-header-text">
+            <div class="result-tag">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z"></path>
+              </svg>
+              <span>Zora Explanation Report</span>
+            </div>
+            <h2 class="result-title">Here's what Zora found</h2>
+            <p class="result-summary">A clear, plain-language translation of your document with concrete next steps.</p>
           </div>
-          <h2 class="result-title">Here's what Zora found</h2>
-          <p class="result-subtitle">Here is a simple summary of your document and the concrete steps you can take.</p>
+
+          <div class="result-card-actions">
+            <button type="button" id="copy-btn" class="btn-secondary">
+              <svg class="btn-secondary__svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+              </svg>
+              <span>Copy explanation</span>
+            </button>
+            <p id="copy-feedback" class="copy-feedback copy-feedback--hidden">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              <span>Copied to clipboard!</span>
+            </p>
+          </div>
         </div>
 
-        <div class="result-content-grid">
-          <!-- Explanation Block -->
-          <div class="result-block result-block--explanation">
-            <div class="result-block__head">
-              <span class="result-block__icon" aria-hidden="true">💡</span>
-              <h3 class="result-block__heading">Explanation</h3>
+        <div class="result-columns-layout">
+          <!-- Explanation Column -->
+          <div class="result-column result-column--explanation">
+            <div class="column-header">
+              <div class="column-icon-wrap" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                  <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                </svg>
+              </div>
+              <h3 class="column-title">Explanation</h3>
             </div>
             <p id="result-explanation" class="result-explanation"></p>
           </div>
 
-          <!-- Next Steps Block -->
-          <div class="result-block result-block--steps">
-            <div class="result-block__head">
-              <span class="result-block__icon" aria-hidden="true">📌</span>
-              <h3 class="result-block__heading">Next steps</h3>
+          <!-- Next Steps Column -->
+          <div class="result-column result-column--steps">
+            <div class="column-header">
+              <div class="column-icon-wrap column-icon-wrap--steps" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="9 11 12 14 22 4"></polyline>
+                  <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                </svg>
+              </div>
+              <h3 class="column-title">Next steps</h3>
             </div>
             <ol id="result-steps" class="result-steps"></ol>
           </div>
-        </div>
-
-        <div class="result-footer">
-          <button type="button" id="copy-btn" class="btn-secondary">
-            <span class="btn-secondary__icon" aria-hidden="true">📋</span>
-            <span>Copy explanation</span>
-          </button>
-          <p id="copy-feedback" class="copy-feedback copy-feedback--hidden">Copied to clipboard!</p>
         </div>
       </section>
 
       <!-- Error State Card -->
       <section id="error-card" class="card error-card error-card--hidden" aria-label="Error notice">
-        <div class="error-card__icon" aria-hidden="true">💬</div>
-        <div class="error-card__body">
-          <h3 class="error-card__title">Could not analyze document</h3>
+        <div class="error-symbol-wrap" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+          </svg>
+        </div>
+        <div class="error-text-block">
+          <h3 class="error-headline">Could not analyze document</h3>
           <p id="error-message" class="error-card__message"></p>
         </div>
         <button type="button" id="retry-btn" class="btn-secondary">Try again</button>
       </section>
 
-      <!-- Footer Note -->
-      <footer class="site-footer">
+      <!-- Studio Footer -->
+      <footer class="studio-footer">
         <p>Clarify AI: Made to help everyday people understand official paperwork.</p>
       </footer>
     </main>
