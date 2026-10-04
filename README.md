@@ -8,9 +8,8 @@ _Understand what matters! Know what to do!_
 
  **From complicated documents to clear explanations and actionable next steps.**
 
-![Clarify AI overview](docs/assets/image.png)
+[![Clarify AI overview](docs/assets/home.png)](https://rayssaareis.github.io/bureaucracy-translator/)
 
-<br>
 
 [![Architecture diagram](https://gitdiagram.com/diagram-badge.svg)](https://gitdiagram.com/rayssaareis/bureaucracy-translator?utm_source=readme&utm_medium=badge)
 
@@ -33,7 +32,7 @@ Understanding this can be crucial before signing or responding to a document.
 
 **What if a document could explain itself?**
 
-<br>
+[![Clarify AI overview](docs/assets/image.png)](https://rayssaareis.github.io/bureaucracy-translator/)
 
 ## From the Problem to Clarify AI
 
@@ -354,6 +353,8 @@ On Windows:
 ```powershell
 .\gradlew.bat clean test
 ```
+
+
 
 ## Project Structure
 
