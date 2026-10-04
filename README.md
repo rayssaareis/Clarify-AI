@@ -1,386 +1,462 @@
-# Bureaucracy Translator🪻️
+<div align="center">
 
-**Making bureaucratic language easier to understand!** :)
+<img src="src/main/resources/static/assets/logo.png" alt="Clarify AI Logo" width="90" />
 
-Bureaucratic and legal documents can be difficult to understand even when you know the language.
+# Clarify AI
 
-They are often filled with formal terms, long sentences, and information that is hard to turn into a simple answer:
+_Understand what matters! Know what to do!_
 
-> **“What does this actually mean, and what do I need to do?”**
+ **From complicated documents to clear explanations and actionable next steps.**
 
-**Bureaucracy Translator** is a hackathon project built to make that process simpler.
+![alt text](docs/assets/image.png)
 
-You can paste the text of a document or upload an image. The application extracts the content when necessary and uses AI to explain it in plain language, highlight the important information, and show the next steps in a clear way.
+<br>
 
----
+[![Architecture diagram](https://gitdiagram.com/diagram-badge.svg)](https://gitdiagram.com/rayssaareis/bureaucracy-translator?utm_source=readme&utm_medium=badge)
 
-## 🚧 Status
+</div>
 
-**Early development**
 
-The core backend, document-processing pipeline, and initial frontend are working.
+## The Problem
 
-### Current progress
+Bureaucratic documents are everywhere.
 
-* [x] Spring Boot project setup
-* [x] Java 21 configuration
-* [x] Gradle Wrapper
-* [x] Initial package structure
-* [x] Gemini integration
-* [x] `/api/translate` endpoint
-* [x] OCR integration
-* [x] Text document translation
-* [x] Image document translation
-* [x] Structured AI response
-* [x] Input validation and error handling
-* [x] Automated tests added
-* [x] Frontend
-* [x] Language selection
-* [x] Text flow manually tested through the frontend
-* [ ] Full end-to-end test suite verified locally
-* [ ] Deployment
+Contracts, notices and forms often hide important information behind complex language and lengthy details.
 
----
+Most people simply want to know:
 
-## ✨ How It Works
+* What does it mean?
+* What do I need to do?
+* What happens if I do nothing?
 
-The application supports two input methods:
+Understanding this can be crucial before signing or responding to a document.
 
-### 📝 Text
+**What if a document could explain itself?**
 
-Paste the text of a bureaucratic document and choose the desired output language.
+<br>
 
-### 📄 Image
+## From the Problem to Clarify AI
 
-Upload an image of a document. The backend sends it to OCR.space to extract the text before sending it through the same AI translation pipeline.
+I work in real estate, where documents are part of everyday work.
 
-### Text Flow
+Contracts, notices, forms and other documents are often filled with legal language and details that matter.
+
+Over time, I noticed something simple: the person receiving the document often just wants to understand it.
+
+That observation became the starting point for Clarify AI.
+
+<br>
+
+## How Clarify AI Works
+
+Clarify AI turns a document into a clearer, more actionable explanation.
+
+### Key Features
+
+| Feature                   | What it does                                                           |
+| ------------------------- | ---------------------------------------------------------------------- |
+| **Text input**            | Analyze text directly without uploading a file                         |
+| **Image input**           | Extract text from document images using OCR                            |
+| **AI explanation**        | Transform complex content into a clearer explanation                   |
+| **Actionable next steps** | Highlight what the user may need to do next                            |
+| **Language support**      | Return the explanation in the document's original language or English  |
+| **Simple interface**      | Focus on understanding the document, not navigating a complicated tool |
+
+<br>
+
+### From Document to Clarity
 
 ```text
-User enters bureaucratic text
-        ↓
-Frontend validates input
-        ↓
+┌─────────────────────┐
+│      Document       │
+│                     │
+│  Complex language   │
+│  Legal references   │
+│  Important details  │
+└──────────┬──────────┘
+           │
+           ▼
+┌─────────────────────┐
+│     Clarify AI      │
+│                     │
+│  OCR + AI analysis  │
+└──────────┬──────────┘
+           │
+           ▼
+┌─────────────────────┐
+│      Clarity        │
+│                     │
+│  What it means      │
+│  What to do next    │
+└─────────────────────┘
+```
+
+Behind the interface, Clarify AI receives the user's input, processes the document when necessary, sends the relevant content through the AI pipeline, and returns a structured response containing an explanation and next steps.
+
+<br>
+
+
+## Under the Hood
+
+
+[![Architecture diagram of rayssaareis/bureaucracy-translator](https://gitdiagram.com/rayssaareis/bureaucracy-translator/diagram.png)](https://gitdiagram.com/rayssaareis/bureaucracy-translator?utm_source=readme&utm_medium=picture)
+
+
+### Request Flow
+
+```text
+User
+  ↓
+Frontend
+  ↓
 POST /api/translate
-        ↓
-Spring Boot validates request
-        ↓
-Gemini processes the content
-        ↓
-Structured explanation + next steps
-        ↓
-Frontend displays the result
+  ↓
+Controller
+  ↓
+Service
+  ↓
+OCR / Gemini
+  ↓
+Response
 ```
 
-### Image Flow
+The frontend communicates with the backend through a REST API.
+
+The backend validates the request, determines whether the input is text or an image, processes the content when necessary, orchestrates the external services, and returns the final result to the frontend.
+
+<br>
+
+### Architecture
 
 ```text
-User uploads document image
-        ↓
-Frontend validates file
-        ↓
+┌──────────────────────────────┐
+│           Frontend           │
+│                              │
+│  HTML + CSS + JavaScript     │
+└──────────────┬───────────────┘
+               │
+               │ HTTP
+               ▼
+┌──────────────────────────────┐
+│        Spring Boot API       │
+│                              │
+│        Controller            │
+│             ↓                │
+│          Service             │
+│             ↓                │
+│      External Clients        │
+└────────────┬───────┬─────────┘
+             │       │
+             ▼       ▼
+        OCR.space  Gemini
+             │       │
+             └───┬───┘
+                 ▼
+              Response
+```
+
+The backend follows a layered structure so that HTTP handling, business logic and external integrations remain separated.
+
+<br>
+
+### Technology Stack
+
+| Layer        | Technology               |
+| ------------ | ------------------------ |
+| **Language** | Java 21                  |
+| **Backend**  | Spring Boot 3            |
+| **Build**    | Gradle                   |
+| **API**      | REST                     |
+| **Frontend** | HTML, CSS, JavaScript    |
+| **OCR**      | OCR.space API            |
+| **AI**       | Google Gemini API        |
+| **Testing**  | JUnit + Spring Boot Test |
+
+<br>
+
+## OCR & AI Pipeline
+
+For image-based documents, Clarify AI uses a two-stage processing pipeline:
+
+```text
+Image
+  ↓
+OCR.space
+  ↓
+Extracted text
+  ↓
+Gemini
+  ↓
+Explanation + Next Steps
+```
+
+For text input, the OCR step is skipped:
+
+```text
+Text
+  ↓
+Gemini
+  ↓
+Explanation + Next Steps
+```
+
+This keeps the processing path appropriate to the type of input received by the API.
+
+<br>
+
+## API
+
+Clarify AI exposes its own REST endpoint:
+
+```http
 POST /api/translate
-        ↓
-Spring Boot validates image
-        ↓
-OCR.space extracts the text
-        ↓
-Extracted text is sent to Gemini
-        ↓
-Structured explanation + next steps
-        ↓
-Frontend displays the result
 ```
 
----
-
-## 🏗️ Architecture
-
-```text
-                         User
-                           │
-              ┌────────────┴────────────┐
-              │                         │
-              ▼                         ▼
-       Paste document             Upload image
-              │                         │
-              └────────────┬────────────┘
-                           ▼
-                  Static Frontend
-                           │
-                           ▼
-                 Spring Boot REST API
-                    │             │
-                    │             │
-                    ▼             ▼
-               OCR.space      Gemini API
-                    │             │
-                    └──────┬──────┘
-                           ▼
-                  Structured response
-                    │              │
-                    ▼              ▼
-              Explanation      Next steps
-```
-
-External API calls are handled by the backend, so API keys are never exposed in the browser.
-
----
-
-## 🛠️ Tech Stack
-
-* **Java 21**
-* **Spring Boot 3**
-* **Gradle**
-* **Google Gemini API** for document explanation
-* **OCR.space** for text extraction from images
-* **HTML / CSS / JavaScript** for the frontend
-* **Render** for deployment *(planned)*
-
----
-
-## 🎨 Frontend
-
-The project includes a static frontend served directly by Spring Boot.
-
-### Features
-
-* Paste bureaucratic text
-* Upload documents as images
-* Drag-and-drop image upload
-* Client-side file validation
-* Character counter
-* Source language toggle
-* Translation/explanation loading state
-* Structured explanation and next steps
-* Copy result button
-* Responsive layout
-
-### Structure
-
-```text
-src/main/resources/static/
-├── index.html
-├── css/
-│   └── styles.css
-└── js/
-    ├── config.js
-    ├── api.js
-    ├── validation.js
-    └── app.js
-```
-
----
-
-## 🔌 API
-
-### `POST /api/translate`
-
-The main endpoint accepts either document text or an image.
-
-The request must contain **exactly one** of:
+The endpoint accepts exactly one input type:
 
 * `text`
 * `image`
 
-`targetLanguage` accepts:
+It also accepts:
 
-* `original`
-* `en`
+```text
+targetLanguage = original | en
+```
 
-### Limits
+<br>
 
-* Text: maximum 8,000 characters
-* Image formats: JPEG / JPG / PNG
-* Image size: maximum 1 MB
+#### Text request
 
-### Success Response
+```bash
+curl -X POST http://localhost:8080/api/translate \
+  -F "text=Your document text here" \
+  -F "targetLanguage=original"
+```
+
+#### Image request
+
+```bash
+curl -X POST http://localhost:8080/api/translate \
+  -F "image=@document.png" \
+  -F "targetLanguage=original"
+```
+
+#### Success response
 
 ```json
 {
-  "explanation": "Plain-language explanation of the document.",
+  "explanation": "A clear explanation of what the document means.",
   "nextSteps": [
-    "First action the user should consider.",
-    "Second action the user should consider."
+    "Review the requested information.",
+    "Respond before the indicated deadline."
   ]
 }
 ```
 
-### Error Response
+#### Error response
 
 ```json
 {
-  "error": "string"
+  "error": "Description of the error."
 }
 ```
 
-### Image Request Example
+### Testing
+
+The project includes automated tests covering the main backend behavior and external client integrations.
+
+Run the complete test suite with:
 
 ```bash
-curl -X POST http://localhost:8080/api/translate \
-  -F "image=@document.jpg" \
-  -F "targetLanguage=original"
+./gradlew clean test
 ```
 
-For image requests, the backend sends the document to OCR.space, extracts the text, and then passes the extracted text through the same translation pipeline used for text input.
+On Windows:
 
----
-
-## 💻 Running Locally
-
-### Requirements
-
-* JDK 21
-* Git
-
-Gradle does not need to be installed globally. The project uses the **Gradle Wrapper**.
-
-Verify Java:
-
-```bash
-java -version
+```powershell
+.\gradlew.bat clean test
 ```
 
-### Clone the repository
+The test suite covers request validation, controller behavior, OCR integration behavior, Gemini integration behavior, malformed responses, HTTP failures and network failures.
+
+## Run It Yourself
+
+### Prerequisites
+
+Before running Clarify AI locally, you need:
+
+* Java 21
+* A Gemini API key
+* An OCR.space API key
+* Internet access for the external API integrations
+
+The application uses external AI and OCR services, so their respective API access and usage limits apply.
+
+### Setup
+
+Clone the repository:
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/rayssaareis/bureaucracy-translator.git
 cd bureaucracy-translator
 ```
 
-### Configure environment variables
-
-The application requires:
-
-```text
-GEMINI_API_KEY
-GEMINI_MODEL
-OCR_SPACE_API_KEY
-```
+Configure the required environment variables.
 
 #### Windows PowerShell
 
 ```powershell
-$env:GEMINI_API_KEY="your-gemini-api-key"
-$env:GEMINI_MODEL="gemini-3.5-flash-lite"
-$env:OCR_SPACE_API_KEY="your-ocr-space-api-key"
+[Environment]::SetEnvironmentVariable("GEMINI_API_KEY", "your-gemini-key", "User")
+[Environment]::SetEnvironmentVariable("OCR_SPACE_API_KEY", "your-ocr-space-key", "User")
 ```
 
-#### macOS / Linux
+Restart the terminal after configuring the variables.
 
-```bash
-export GEMINI_API_KEY="your-gemini-api-key"
-export GEMINI_MODEL="gemini-3.5-flash-lite"
-export OCR_SPACE_API_KEY="your-ocr-space-api-key"
-```
-
-Start the application:
-
-#### Windows
+You can verify that the variables are available with:
 
 ```powershell
-.\gradlew.bat bootRun
+$env:GEMINI_API_KEY
+$env:OCR_SPACE_API_KEY
 ```
 
-#### macOS / Linux
+Do not commit API keys or other secrets to the repository.
+
+### Run
+
+Start the application with:
 
 ```bash
 ./gradlew bootRun
 ```
 
-The application starts on:
+On Windows:
+
+```powershell
+.\gradlew.bat bootRun
+```
+
+Then open:
 
 ```text
 http://localhost:8080
 ```
 
----
+### Test
 
-## 🧪 Testing
+Run the complete automated test suite:
 
-The project includes automated tests covering the translation service and REST controller.
+```bash
+./gradlew clean test
+```
 
-The text translation flow has also been manually tested through the frontend with a structured bureaucratic document.
-
-> The full automated test suite should be verified locally before marking all tests as passing.
-
-### Run tests
-
-The project uses the Gradle Wrapper, so Gradle does not need to be installed globally.
-
-#### Windows
+On Windows:
 
 ```powershell
-$env:GEMINI_API_KEY="dummy"
-$env:OCR_SPACE_API_KEY="dummy"
 .\gradlew.bat clean test
 ```
 
-#### macOS / Linux
-
-```bash
-GEMINI_API_KEY=dummy OCR_SPACE_API_KEY=dummy ./gradlew clean test
-```
-
----
-
-## 📦 Package Structure
+## Project Structure
 
 ```text
-src/main/java/com/bureaucracytranslator/
-├── controller/   → REST API endpoints
-├── service/      → Application and business logic
-├── client/       → External API integrations
-├── dto/          → Request and response objects
-├── config/       → Configuration and Spring beans
-└── exception/    → Exception handling
+bureaucracy-translator/
+│
+├── docs/
+│
+├── gradle/
+│   └── wrapper/
+│
+├── src/
+│   ├── main/
+│   │   ├── java/
+│   │   │   └── com/
+│   │   │       └── bureaucracytranslator/
+│   │   │           ├── client/
+│   │   │           ├── config/
+│   │   │           ├── controller/
+│   │   │           ├── dto/
+│   │   │           ├── exception/
+│   │   │           └── service/
+│   │   │
+│   │   └── resources/
+│   │       ├── static/
+│   │       │   ├── assets/
+│   │       │   ├── css/
+│   │       │   ├── js/
+│   │       │   └── index.html
+│   │       └── application.properties
+│   │
+│   └── test/
+│       └── java/
+│
+├── gradlew
+├── gradlew.bat
+└── README.md
 ```
 
----
+## Design Decisions
 
-## 🔐 Environment Variables
+### Separate the frontend from the processing logic
 
-The application uses the following environment variables:
+The frontend is responsible for the user experience and communicating with the API.
 
-```text
-GEMINI_API_KEY
-GEMINI_MODEL
-OCR_SPACE_API_KEY
+The backend owns validation, processing and integration with external services.
+
+### Use a dedicated service layer
+
+Business logic is kept outside the controller so that HTTP concerns do not become tightly coupled to document processing.
+
+### Isolate external integrations
+
+OCR and Gemini communication are handled through dedicated clients.
+
+This makes external service behavior easier to test and keeps the core application logic independent from implementation details.
+
+### Return structured results
+
+Instead of returning an unstructured block of generated text, the API returns:
+
+```json
+{
+  "explanation": "...",
+  "nextSteps": []
+}
 ```
 
-`GEMINI_MODEL` is configurable so the application can switch Gemini models without changing application code.
+This gives the frontend predictable data to render and keeps the distinction between understanding the document and deciding what to do next.
 
-**API keys should never be committed to the repository.**
+### Keep credentials outside the codebase
 
----
+API credentials are provided through environment variables rather than being stored directly in source code.
 
-## 🔒 Security & Privacy
+<br>
 
-The application applies validation at both the frontend and backend layers.
+## Roadmap
 
-* Input type and size validation
-* Text length validation
-* Image format validation
-* API-level request validation
-* API keys remain on the backend and are not exposed to the frontend
-* No frontend framework or build process required
+Potential future improvements include:
 
-### Privacy
+* Support for additional document formats
+* More advanced document structure detection
+* Improved multilingual support
+* Conversation history for document analysis
+* More granular explanations of specific sections
+* Additional accessibility improvements
+* More robust observability and monitoring
 
-Document contents and AI responses should not be written to application logs.
+<br>
 
----
+## Hackathon
 
-## 🚀 Future Improvements
+Clarify AI was built as a hackathon project with a simple goal:
 
-The project is still in early development. Planned improvements include:
+**Make complex information easier to understand and act on.**
 
-* [ ] Full end-to-end testing
-* [ ] Deployment
-* [ ] Further UI/UX improvements
-* [ ] Additional document and language support
-* [ ] More robust document processing
+*Built as a hackathon project. <3*
 
----
+<br>
 
-*Built as a **hackathon project** <3*
+## License
+
+This project is currently provided as a hackathon project and educational work.
+
+See the repository for the current licensing status.
+
