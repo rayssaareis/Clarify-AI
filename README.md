@@ -8,7 +8,7 @@ _Understand what matters! Know what to do!_
 
  **From complicated documents to clear explanations and actionable next steps.**
 
-![alt text](docs/assets/image.png)
+![Clarify AI overview](docs/assets/image.png)
 
 <br>
 
@@ -456,7 +456,6 @@ Clarify AI was built as a hackathon project with a simple goal:
 
 ## License
 
-This project is currently provided as a hackathon project and educational work.
+Clarify AI is a hackathon project created by Rayssa Reis.
 
-See the repository for the current licensing status.
-
+The project is shared for educational and portfolio purposes. No open-source license has been applied at this time.
