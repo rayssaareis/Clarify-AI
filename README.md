@@ -278,6 +278,8 @@ On Windows:
 
 The test suite covers request validation, controller behavior, OCR integration behavior, Gemini integration behavior, malformed responses, HTTP failures and network failures.
 
+[![Clarify AI overview](docs/assets/Home-gif.gif)](https://rayssaareis.github.io/bureaucracy-translator/)
+
 ## Run It Yourself
 
 ### Prerequisites
@@ -353,8 +355,9 @@ On Windows:
 ```powershell
 .\gradlew.bat clean test
 ```
+<br>
 
-
+[![Clarify AI overview](docs/assets/English.png)](https://rayssaareis.github.io/bureaucracy-translator/)
 
 ## Project Structure
 
@@ -460,3 +463,7 @@ Clarify AI was built as a hackathon project with a simple goal:
 Clarify AI is a hackathon project created by Rayssa Reis.
 
 The project is shared for educational and portfolio purposes. No open-source license has been applied at this time.
+
+<br>
+
+[![Clarify AI overview](docs/assets/banner.png)](https://rayssaareis.github.io/bureaucracy-translator/)
