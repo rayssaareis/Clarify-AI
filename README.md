@@ -278,7 +278,11 @@ On Windows:
 
 The test suite covers request validation, controller behavior, OCR integration behavior, Gemini integration behavior, malformed responses, HTTP failures and network failures.
 
-[![Clarify AI overview](docs/assets/Home-gif.gif)](https://rayssaareis.github.io/bureaucracy-translator/)
+<div align="center"> 
+
+  [![Clarify AI overview](docs/assets/Home-gif.gif)](https://rayssaareis.github.io/bureaucracy-translator/)
+
+</div>
 
 ## Run It Yourself
 
