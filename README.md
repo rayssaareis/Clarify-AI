@@ -361,7 +361,8 @@ On Windows:
 ```
 <br>
 
-[![Clarify AI overview](docs/assets/English.png)](https://rayssaareis.github.io/bureaucracy-translator/)
+[![Clarify AI overview](docs/assets/Banner.png)](https://rayssaareis.github.io/bureaucracy-translator/)
+
 
 ## Project Structure
 
@@ -469,5 +470,3 @@ Clarify AI is a hackathon project created by Rayssa Reis.
 The project is shared for educational and portfolio purposes. No open-source license has been applied at this time.
 
 <br>
-
-[![Clarify AI overview](docs/assets/banner.png)](https://rayssaareis.github.io/bureaucracy-translator/)
