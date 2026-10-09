@@ -107,15 +107,14 @@
                 "Paste any complicated letter, contract clause, or official decree on the right. I will cut through the fog and tell you what it actually means and what you need to do."
               </p>
 
-              <!-- Space Prepared for Future Illustration Artwork -->
-              <div class="illustration-slot" title="Area for future illustration" aria-label="Illustration placeholder">
-                <div class="illustration-slot__content">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
-                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
-                  </svg>
-                  <span>Illustration space</span>
-                </div>
+              <!-- Space Prepared the Illustration -->
+              <div class="illustration-slot" aria-label="Clarify AI document illustration">
+                <img
+                  class="illustration-slot__image"
+                  src="C:\Users\Rayssa\dev\bureaucracy-translator\src\main\resources\static\assets\doc-svg.png"
+                  alt="A bureaucratic document transformed into a clear explanation and actionable next steps"
+                  loading="lazy" width="150px"
+                />
               </div>
 
               <div class="reassurance-list">
@@ -232,6 +231,15 @@
                   </button>
                 </div>
               </div>
+            </div>
+
+            <!-- Simplification Level -->
+            <div class="field level-field">
+              <div class="input-head">
+                <span id="level-label" class="input-label">How much detail do you want?</span>
+                <span class="input-annotation">Choose the depth of the explanation</span>
+              </div>
+              <div id="level-group" class="level-group" role="radiogroup" aria-labelledby="level-label"></div>
             </div>
 
             <!-- Language and Preference Controls -->

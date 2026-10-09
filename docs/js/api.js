@@ -6,13 +6,15 @@ import { CONFIG } from "./config.js";
  *
  * Contract (matches TranslateController):
  *   multipart/form-data with exactly one of "text" / "image", plus
- *   "targetLanguage" ("original" | "en").
+ *   "targetLanguage" ("original" | "en") and an optional "simplificationLevel"
+ *   ("QUICK_SIMPLE" | "CLEAR_DETAILED" | "IN_DEPTH"; the backend defaults to
+ *   CLEAR_DETAILED when it is omitted).
  *
  * Resolves with { explanation, nextSteps } on success.
  * Rejects with an Error whose .message is already user-friendly
  * (either the backend's ErrorResponse.error, or a generic fallback).
  */
-export async function translate({ text, imageFile, targetLanguage }, { signal } = {}) {
+export async function translate({ text, imageFile, targetLanguage, simplificationLevel }, { signal } = {}) {
   const formData = new FormData();
 
   if (imageFile) {
@@ -21,6 +23,9 @@ export async function translate({ text, imageFile, targetLanguage }, { signal } 
     formData.append("text", text);
   }
   formData.append("targetLanguage", targetLanguage);
+  if (simplificationLevel) {
+    formData.append("simplificationLevel", simplificationLevel);
+  }
 
   let response;
   try {
