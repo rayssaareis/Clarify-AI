@@ -1,6 +1,7 @@
 package com.bureaucracytranslator.client;
 
 import com.bureaucracytranslator.config.GeminiProperties;
+import com.bureaucracytranslator.dto.SimplificationLevel;
 import com.bureaucracytranslator.dto.TranslateResponse;
 import com.bureaucracytranslator.exception.GeminiServiceException;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -97,7 +98,7 @@ class GeminiClientTest {
                 .andExpect(method(HttpMethod.POST))
                 .andRespond(withSuccess(body, MediaType.APPLICATION_JSON));
 
-        TranslateResponse result = client.explain("Comparecer no dia 15/10.", "original", "req-1");
+        TranslateResponse result = client.explain("Comparecer no dia 15/10.", "original", SimplificationLevel.CLEAR_DETAILED, "req-1");
 
         assertThat(result.explanation()).isEqualTo("Voce deve comparecer a audiencia.");
         assertThat(result.nextSteps())
@@ -116,7 +117,7 @@ class GeminiClientTest {
                 .andRespond(withSuccess(
                         envelope(structured("ok", List.of("step"))), MediaType.APPLICATION_JSON));
 
-        otherClient.explain("text", "original", "req-2");
+        otherClient.explain("text", "original", SimplificationLevel.CLEAR_DETAILED, "req-2");
 
         otherServer.verify();
     }
@@ -143,7 +144,7 @@ class GeminiClientTest {
                 .andRespond(withSuccess(
                         envelope(structured("ok", List.of("step"))), MediaType.APPLICATION_JSON));
 
-        client.explain("Unique document text 123", "original", "req-3");
+        client.explain("Unique document text 123", "original", SimplificationLevel.CLEAR_DETAILED, "req-3");
 
         server.verify();
     }
@@ -160,7 +161,70 @@ class GeminiClientTest {
                 .andRespond(withSuccess(
                         envelope(structured("ok", List.of("step"))), MediaType.APPLICATION_JSON));
 
-        client.explain("some document", targetLanguage, "req-4");
+        client.explain("some document", targetLanguage, SimplificationLevel.CLEAR_DETAILED, "req-4");
+
+        server.verify();
+    }
+
+    // ---------- simplification level ----------
+
+    private static final String BASE_ACCURACY_RULE = "Never invent clauses, deadlines, amounts, fees, rights, obligations, consequences, or facts";
+
+    @ParameterizedTest
+    @CsvSource(delimiter = '|', value = {
+            "QUICK_SIMPLE   | Simplification level: QUICK_SIMPLE   | Use very common words and short sentences",
+            "CLEAR_DETAILED | Simplification level: CLEAR_DETAILED | Explain the document in accessible, everyday language",
+            "IN_DEPTH       | Simplification level: IN_DEPTH       | Explain relevant official or technical terminology in plain language"
+    })
+    void explain_systemInstructionContainsTheSelectedLevelOnly(
+            SimplificationLevel level, String levelMarker, String levelRule) throws Exception {
+        String[] otherMarkers = java.util.Arrays.stream(SimplificationLevel.values())
+                .filter(other -> other != level)
+                .map(other -> "Simplification level: " + other.name())
+                .toArray(String[]::new);
+
+        server.expect(requestTo(GEMINI_URL))
+                .andExpect(jsonPath("$.systemInstruction.parts[0].text").value(containsString(levelMarker)))
+                .andExpect(jsonPath("$.systemInstruction.parts[0].text").value(containsString(levelRule)))
+                .andExpect(jsonPath("$.systemInstruction.parts[0].text").value(not(containsString(otherMarkers[0]))))
+                .andExpect(jsonPath("$.systemInstruction.parts[0].text").value(not(containsString(otherMarkers[1]))))
+                .andRespond(withSuccess(
+                        envelope(structured("ok", List.of("step"))), MediaType.APPLICATION_JSON));
+
+        client.explain("some document", "original", level, "req-level");
+
+        server.verify();
+    }
+
+    @ParameterizedTest
+    @EnumSource(SimplificationLevel.class)
+    void explain_everyLevelKeepsTheAccuracyRulesAndStructuredOutput(SimplificationLevel level) throws Exception {
+        server.expect(requestTo(GEMINI_URL))
+                .andExpect(jsonPath("$.systemInstruction.parts[0].text").value(containsString("plain-language explainer")))
+                .andExpect(jsonPath("$.systemInstruction.parts[0].text").value(containsString(BASE_ACCURACY_RULE)))
+                .andExpect(jsonPath("$.systemInstruction.parts[0].text")
+                        .value(containsString("Never omit a critical warning, deadline, required action, or consequence")))
+                .andExpect(jsonPath("$.systemInstruction.parts[0].text")
+                        .value(containsString("do not give professional legal advice")))
+                .andExpect(jsonPath("$.generationConfig.responseMimeType").value("application/json"))
+                .andExpect(jsonPath("$.contents[0].parts[0].text").value(containsString("Doc for level test")))
+                .andRespond(withSuccess(
+                        envelope(structured("ok", List.of("step"))), MediaType.APPLICATION_JSON));
+
+        client.explain("Doc for level test", "original", level, "req-level-rules");
+
+        server.verify();
+    }
+
+    @Test
+    void explain_withNullLevel_fallsBackToDefaultLevelInstructions() throws Exception {
+        server.expect(requestTo(GEMINI_URL))
+                .andExpect(jsonPath("$.systemInstruction.parts[0].text")
+                        .value(containsString("Simplification level: " + SimplificationLevel.DEFAULT.name())))
+                .andRespond(withSuccess(
+                        envelope(structured("ok", List.of("step"))), MediaType.APPLICATION_JSON));
+
+        client.explain("some document", "original", null, "req-null-level");
 
         server.verify();
     }
@@ -180,7 +244,7 @@ class GeminiClientTest {
         server.expect(requestTo(GEMINI_URL))
                 .andRespond(withSuccess(responseBody, MediaType.APPLICATION_JSON));
 
-        assertThatThrownBy(() -> client.explain("text", "original", "req-5"))
+        assertThatThrownBy(() -> client.explain("text", "original", SimplificationLevel.CLEAR_DETAILED, "req-5"))
                 .isInstanceOf(GeminiServiceException.class)
                 .hasMessageContaining("missing expected content");
     }
@@ -190,7 +254,7 @@ class GeminiClientTest {
         server.expect(requestTo(GEMINI_URL))
                 .andRespond(withSuccess("<html>unexpected</html>", MediaType.APPLICATION_JSON));
 
-        assertThatThrownBy(() -> client.explain("text", "original", "req-6"))
+        assertThatThrownBy(() -> client.explain("text", "original", SimplificationLevel.CLEAR_DETAILED, "req-6"))
                 .isInstanceOf(GeminiServiceException.class)
                 .hasMessageContaining("Failed to parse Gemini response");
     }
@@ -202,7 +266,7 @@ class GeminiClientTest {
         server.expect(requestTo(GEMINI_URL))
                 .andRespond(withSuccess(envelope("this is plain text, not JSON"), MediaType.APPLICATION_JSON));
 
-        assertThatThrownBy(() -> client.explain("text", "original", "req-7"))
+        assertThatThrownBy(() -> client.explain("text", "original", SimplificationLevel.CLEAR_DETAILED, "req-7"))
                 .isInstanceOf(GeminiServiceException.class)
                 .hasMessageContaining("Failed to parse structured Gemini output");
     }
@@ -214,7 +278,7 @@ class GeminiClientTest {
                         envelope("{\"explanation\":\"cut off midway\",\"nextSteps\":[\"a\""),
                         MediaType.APPLICATION_JSON));
 
-        assertThatThrownBy(() -> client.explain("text", "original", "req-8"))
+        assertThatThrownBy(() -> client.explain("text", "original", SimplificationLevel.CLEAR_DETAILED, "req-8"))
                 .isInstanceOf(GeminiServiceException.class)
                 .hasMessageContaining("Failed to parse structured Gemini output");
     }
@@ -229,7 +293,7 @@ class GeminiClientTest {
         server.expect(requestTo(GEMINI_URL))
                 .andRespond(withSuccess(envelope("{\"explanation\":\"only this\"}"), MediaType.APPLICATION_JSON));
 
-        TranslateResponse result = client.explain("text", "original", "req-9");
+        TranslateResponse result = client.explain("text", "original", SimplificationLevel.CLEAR_DETAILED, "req-9");
 
         assertThat(result.explanation()).isEqualTo("only this");
         assertThat(result.nextSteps()).isNull();
@@ -249,7 +313,7 @@ class GeminiClientTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .body("{\"error\":{\"message\":\"upstream error\"}}"));
 
-        assertThatThrownBy(() -> client.explain("text", "original", "req-10"))
+        assertThatThrownBy(() -> client.explain("text", "original", SimplificationLevel.CLEAR_DETAILED, "req-10"))
                 .isInstanceOf(GeminiServiceException.class)
                 .hasMessageContaining("call failed")
                 .hasCauseInstanceOf(RestClientResponseException.class);
@@ -260,7 +324,7 @@ class GeminiClientTest {
         server.expect(requestTo(GEMINI_URL))
                 .andRespond(withException(new IOException("connection reset")));
 
-        assertThatThrownBy(() -> client.explain("text", "original", "req-11"))
+        assertThatThrownBy(() -> client.explain("text", "original", SimplificationLevel.CLEAR_DETAILED, "req-11"))
                 .isInstanceOf(GeminiServiceException.class)
                 .hasMessageContaining("call failed")
                 .hasCauseInstanceOf(ResourceAccessException.class);

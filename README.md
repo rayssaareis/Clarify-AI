@@ -59,6 +59,7 @@ Clarify AI turns a document into a clearer, more actionable explanation.
 | **AI explanation**        | Transform complex content into a clearer explanation                   |
 | **Actionable next steps** | Highlight what the user may need to do next                            |
 | **Language support**      | Return the explanation in the document's original language or English  |
+| **Simplification levels** | Choose a quick summary, a clear and detailed explanation, or an in-depth one |
 | **Simple interface**      | Focus on understanding the document, not navigating a complicated tool |
 
 <br>
@@ -220,7 +221,10 @@ It also accepts:
 
 ```text
 targetLanguage = original | en
+simplificationLevel = QUICK_SIMPLE | CLEAR_DETAILED | IN_DEPTH   (optional, default: CLEAR_DETAILED)
 ```
+
+An invalid `simplificationLevel` returns `400`. Requests that omit it keep working and use `CLEAR_DETAILED`.
 
 <br>
 
@@ -229,7 +233,8 @@ targetLanguage = original | en
 ```bash
 curl -X POST http://localhost:8080/api/translate \
   -F "text=Your document text here" \
-  -F "targetLanguage=original"
+  -F "targetLanguage=original" \
+  -F "simplificationLevel=QUICK_SIMPLE"
 ```
 
 #### Image request

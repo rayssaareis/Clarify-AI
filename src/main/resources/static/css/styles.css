@@ -961,6 +961,122 @@ body {
   transform: scale(1.08);
 }
 
+/* Simplification Level Selector */
+.level-field {
+  margin-top: 26px;
+  container-type: inline-size;
+}
+
+.level-group {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.level-option {
+  position: relative;
+  display: block;
+  cursor: pointer;
+}
+
+/* Visually hidden but still focusable, so keyboard and screen readers work. */
+.level-option__input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.level-option__card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  height: 100%;
+  padding: 14px;
+  background: var(--bg-surface);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  transition: border-color var(--transition-fast), background var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.level-option:hover .level-option__card {
+  border-color: var(--border-strong);
+}
+
+.level-option__top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.level-option__name {
+  font-size: 0.92rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--text-headline);
+  letter-spacing: -0.01em;
+}
+
+.level-option__desc {
+  font-size: 0.8rem;
+  line-height: 1.45;
+  color: var(--text-muted);
+}
+
+.level-option__check {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid var(--border-strong);
+  border-radius: var(--radius-full);
+  color: var(--bg-surface);
+  transition: background var(--transition-fast), border-color var(--transition-fast);
+}
+
+.level-option__check svg {
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+
+.level-option__input:checked + .level-option__card {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+
+.level-option__input:checked + .level-option__card .level-option__name {
+  color: var(--accent);
+}
+
+.level-option__input:checked + .level-option__card .level-option__check {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.level-option__input:checked + .level-option__card .level-option__check svg {
+  opacity: 1;
+}
+
+.level-option__input:focus-visible + .level-option__card {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent), 0 0 0 5px var(--accent-glow);
+}
+
+/* Narrow containers (phones, or the form column on small desktops): stack the options. */
+@container (max-width: 480px) {
+  .level-group {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* Language Dropdown */
 .language-field {
   margin-top: 26px;

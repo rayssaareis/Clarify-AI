@@ -2,6 +2,7 @@ package com.bureaucracytranslator.service;
 
 import com.bureaucracytranslator.client.GeminiClient;
 import com.bureaucracytranslator.client.OcrSpaceClient;
+import com.bureaucracytranslator.dto.SimplificationLevel;
 import com.bureaucracytranslator.dto.TranslateResponse;
 import com.bureaucracytranslator.exception.GeminiServiceException;
 import com.bureaucracytranslator.exception.InvalidRequestException;
@@ -27,18 +28,19 @@ public class TranslateService {
         this.ocrSpaceClient = ocrSpaceClient;
     }
 
-    public TranslateResponse translate(String text, String targetLanguage, String requestId) {
-        TranslateResponse response = geminiClient.explain(text, targetLanguage, requestId);
+    public TranslateResponse translate(String text, String targetLanguage, SimplificationLevel level, String requestId) {
+        TranslateResponse response = geminiClient.explain(text, targetLanguage, level, requestId);
         validate(response);
         return response;
     }
 
     /**
      * Extracts text from the image via OCR, then reuses the exact same
-     * Gemini flow as translate(String, String, String). Gemini never knows
+     * Gemini flow as translate(String, String, SimplificationLevel, String). Gemini never knows
      * whether the text originally came from a paste or an image.
      */
-    public TranslateResponse translateImage(MultipartFile image, String targetLanguage, String requestId) {
+    public TranslateResponse translateImage(MultipartFile image, String targetLanguage,
+                                            SimplificationLevel level, String requestId) {
         String extractedText = ocrSpaceClient.extractText(image, requestId);
 
         if (extractedText == null || extractedText.isBlank()) {
@@ -50,7 +52,7 @@ public class TranslateService {
                     "The text extracted from the image is too long (max " + MAX_TEXT_LENGTH + " characters).");
         }
 
-        return translate(extractedText, targetLanguage, requestId);
+        return translate(extractedText, targetLanguage, level, requestId);
     }
 
     private void validate(TranslateResponse response) {

@@ -16,4 +16,13 @@ export const CONFIG = {
     { value: "en", label: "English" },
   ],
   DEFAULT_LANGUAGE: "original",
+
+  // Values mirror the backend enum SimplificationLevel; labels and
+  // descriptions are what the user sees in the selector.
+  SIMPLIFICATION_LEVELS: [
+    { value: "QUICK_SIMPLE", label: "Quick & Simple", description: "The essentials, in plain language." },
+    { value: "CLEAR_DETAILED", label: "Clear & Detailed", description: "A clear explanation with the context you need." },
+    { value: "IN_DEPTH", label: "In-Depth Explanation", description: "More context, terminology, and details." },
+  ],
+  DEFAULT_SIMPLIFICATION_LEVEL: "CLEAR_DETAILED",
 };

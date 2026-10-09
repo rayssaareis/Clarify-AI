@@ -22,6 +22,7 @@ const fileNameEl = document.getElementById("file-name");
 const fileSizeEl = document.getElementById("file-size");
 const removeFileBtn = document.getElementById("remove-file");
 
+const levelGroup = document.getElementById("level-group");
 const languageSelect = document.getElementById("language-select");
 const formError = document.getElementById("form-error");
 
@@ -94,8 +95,58 @@ function toggleTheme() {
   applyTheme(next);
 }
 
+const LEVEL_CHECK_ICON =
+  '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+
+// Native radio inputs inside labels: arrow-key navigation, focus handling and
+// screen-reader semantics come from the browser. The default level is the
+// one marked in CONFIG, so the user never has to choose.
+function renderLevelOptions() {
+  CONFIG.SIMPLIFICATION_LEVELS.forEach((level) => {
+    const option = document.createElement("label");
+    option.className = "level-option";
+
+    const input = document.createElement("input");
+    input.type = "radio";
+    input.name = "simplification-level";
+    input.value = level.value;
+    input.className = "level-option__input";
+    input.checked = level.value === CONFIG.DEFAULT_SIMPLIFICATION_LEVEL;
+
+    const card = document.createElement("span");
+    card.className = "level-option__card";
+
+    const top = document.createElement("span");
+    top.className = "level-option__top";
+
+    const name = document.createElement("span");
+    name.className = "level-option__name";
+    name.textContent = level.label;
+
+    const check = document.createElement("span");
+    check.className = "level-option__check";
+    check.setAttribute("aria-hidden", "true");
+    check.innerHTML = LEVEL_CHECK_ICON;
+
+    const description = document.createElement("span");
+    description.className = "level-option__desc";
+    description.textContent = level.description;
+
+    top.append(name, check);
+    card.append(top, description);
+    option.append(input, card);
+    levelGroup.appendChild(option);
+  });
+}
+
+function getSelectedLevel() {
+  const checked = levelGroup.querySelector("input[name='simplification-level']:checked");
+  return checked ? checked.value : CONFIG.DEFAULT_SIMPLIFICATION_LEVEL;
+}
+
 function init() {
   initTheme();
+  renderLevelOptions();
   CONFIG.LANGUAGES.forEach((lang) => {
     const option = document.createElement("option");
     option.value = lang.value;
@@ -218,6 +269,7 @@ async function handleSubmit() {
       text: mode === "text" ? textInput.value : null,
       imageFile: mode === "image" ? selectedFile : null,
       targetLanguage: languageSelect.value,
+      simplificationLevel: getSelectedLevel(),
     });
     showResult(payload);
   } catch (err) {
